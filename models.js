@@ -30,7 +30,7 @@ const restaurantSchema = mongoose.Schema({
 // to generate a human readable string based on the address object
 // we're storing in Mongo.
 restaurantSchema.virtual("addressString").get(function() {
-  return `${this.address.building} ${this.address.street}`.trim();
+  return `${this.address.building} ${this.address.street}, ${this.address.zipcode}`.trim();
 });
 
 // this virtual grabs the most recent grade for a restaurant.
@@ -58,6 +58,7 @@ restaurantSchema.methods.serialize = function() {
 
 // note that all instance methods and virtual properties on our
 // schema must be defined *before* we make the call to `.model`.
-const Restaurant = mongoose.model("Restaurant", restaurantSchema);
+const Restaurant_db = mongoose.model("Restaurant", restaurantSchema);
+//.model(Restaurant) == db.restaurants (in the background) ; it is the singular name of the collection for your model
 
-module.exports = { Restaurant };
+module.exports = { Restaurant_db };

@@ -10,14 +10,14 @@ mongoose.Promise = global.Promise;
 // config.js is where we control constants for entire
 // app like PORT and DATABASE_URL
 const { PORT, DATABASE_URL } = require("./config");
-const { Restaurant } = require("./models");
+const { Restaurant_db } = require("./models");
 
 const app = express();
 app.use(express.json());
 
 // GET requests to /restaurants => return 10 restaurants
 app.get("/restaurants", (req, res) => {
-  Restaurant.find()
+  Restaurant_db.find()
     // we're limiting because restaurants db has > 25,000
     // documents, and that's too much to process/return
     .limit(10)
@@ -37,7 +37,7 @@ app.get("/restaurants", (req, res) => {
 
 // can also request by ID
 app.get("/restaurants/:id", (req, res) => {
-  Restaurant
+  Restaurant_db
     // this is a convenience method Mongoose provides for searching
     // by the object _id property
     .findById(req.params.id)
@@ -59,7 +59,7 @@ app.post("/restaurants", (req, res) => {
     }
   }
 
-  Restaurant.create({
+  Restaurant_db.create({
     name: req.body.name,
     borough: req.body.borough,
     cuisine: req.body.cuisine,
@@ -95,7 +95,7 @@ app.put("/restaurants/:id", (req, res) => {
     }
   });
 
-  Restaurant
+  Restaurant_db
     // all key/value pairs in toUpdate will be updated -- that's what `$set` does
     .findByIdAndUpdate(req.params.id, { $set: toUpdate })
     .then(restaurant => res.status(204).end())
@@ -103,7 +103,7 @@ app.put("/restaurants/:id", (req, res) => {
 });
 
 app.delete("/restaurants/:id", (req, res) => {
-  Restaurant.findByIdAndRemove(req.params.id)
+  Restaurant_db.findByIdAndRemove(req.params.id)
     .then(restaurant => res.status(204).end())
     .catch(err => res.status(500).json({ message: "Internal server error" }));
 });
